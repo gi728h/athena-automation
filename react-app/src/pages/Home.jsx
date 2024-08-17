@@ -1,6 +1,8 @@
 /* eslint-disable no-constant-condition */
 import { useEffect, useState } from 'react';
 import '../assets/pop.css';
+import FullWidthTabs from '../components/Tabs';
+
 export default function Home() {
     const [isPopupVisible, setPopupVisible] = useState(false);
     const [popMessage, setPopMessage] = useState({
@@ -8,7 +10,12 @@ export default function Home() {
         message: ""
     });
     const [Progress, setProgress] = useState(0);
-    const [Readings, setReadings] = useState(null);
+    const [ID_Readings, setID_Readings] = useState([]);
+    // eslint-disable-next-line no-unused-vars
+    const [OD_Readings, setOD_Readings] = useState([]);
+    const [Success, setSuccess] = useState(false);
+
+    
 
 
     useEffect(() => {
@@ -16,7 +23,7 @@ export default function Home() {
             return new Promise(resolve => setTimeout(resolve, ms));
         }
         async function popUp() {
-            var result = await fetch('http://localhost:3003/test');
+            var result = await fetch('http://localhost:3006/test');
             if (!result.ok) {
                 setPopMessage({
                     title: "Error",
@@ -25,13 +32,33 @@ export default function Home() {
                 setPopupVisible(true);
             } else {
                 setPopMessage({
-                    title: "High Callibration",
-                    message: "Put High Callibrtion Master in Gauge"
+                    title: "Zero Callibration",
+                    message: "Put Zero Callibrtion Master in Gauge"
                 })
                 setProgress(25);
                 setPopupVisible(true);
                 while (true) {
-                     result = await fetch('http://localhost:3003/Fields?field_name="High"');
+                     result = await fetch('http://localhost:3006/Fields?field_name="Zero"');
+                    if (!result.ok) {
+                        setPopMessage({
+                            title: "Error",
+                            message: "Internal Server Error"
+                        })
+                    }else{
+                        data = await result.json();
+                        if(data[0].value == "True"){
+                            setPopMessage({
+                                title: "High Callibration",
+                                message: "Put High Callibrtion Master in Gauge"
+                            })
+                            setProgress(50);
+                            break;
+                        }
+                    }
+                }
+
+                while (true) {
+                    result = await fetch('http://localhost:3006/Fields?field_name="High"');
                     if (!result.ok) {
                         setPopMessage({
                             title: "Error",
@@ -42,27 +69,7 @@ export default function Home() {
                         if(data[0].value == "True"){
                             setPopMessage({
                                 title: "Low Callibration",
-                                message: "Put Low Callibrtion Master in Gauge"
-                            })
-                            setProgress(50);
-                            break;
-                        }
-                    }
-                }
-
-                while (true) {
-                    result = await fetch('http://localhost:3003/Fields?field_name="Low"');
-                    if (!result.ok) {
-                        setPopMessage({
-                            title: "Error",
-                            message: "Internal Server Error"
-                        })
-                    }else{
-                        data = await result.json();
-                        if(data[0].value == "True"){
-                            setPopMessage({
-                                title: "Zero Callibration",
-                                message: "Put Zero Callibrtion Master in Gauge"
+                                message: "Put High Callibrtion Master in Gauge"
                             })
                             setProgress(75);
                             break;
@@ -71,7 +78,7 @@ export default function Home() {
                 }
 
                 while (true) {
-                     result = await fetch('http://localhost:3003/Fields?field_name="Zero"');
+                     result = await fetch('http://localhost:3006/Fields?field_name="Low"');
                     if (!result.ok) {
                         setPopMessage({
                             title: "Error",
@@ -93,7 +100,7 @@ export default function Home() {
             console.log("Hi");
             await sleep(1000);
             setPopupVisible(false);
-            result = await fetch('http://localhost:3003/Fields?field_name="READINGS"');
+            result = await fetch('http://localhost:3006/Readings');
             if (!result.ok) {
                 setPopMessage({
                     title: "Error",
@@ -102,14 +109,24 @@ export default function Home() {
                 setPopupVisible(true);
             }else{
                 data = await result.json();
-                setReadings(data[0].value);
+                var id_readings = []
+                var od_readings = []
+                await data.forEach(async element => {
+                    id_readings.push(element.ID_Reading);
+                    od_readings.push(element.OD_Reading);
+                })
+                id_readings = id_readings.reverse();
+                od_readings = od_readings.reverse();
+                setID_Readings(id_readings);
+                setOD_Readings(od_readings);
             }
+            setSuccess(true);
         }
         popUp();
 
         }, []);
     return (
-        <div className="p-5 position-relative">
+        <div className="p-3 pb-0 height-fluid position-relative">
             <div className="container text-center dimmed-background ">
                 {/* <button onClick={togglePopup} className="btn btn-primary">Toggle Pop-up</button> */}
 
@@ -129,9 +146,13 @@ export default function Home() {
                 )}
             </div>
             <h2>Home</h2>
-            <hr></hr>
-
-            {Readings && <h4>Readings: {Readings}</h4>}
+            <hr className='m-2 mb-3'></hr>
+            
+            {/* {ID_Readings && <Chart Readings={ID_Readings}></Chart>} */}
+            {/* {OD_Readings && <Chart Readings={OD_Readings}></Chart>}       */}
+            {Success && <FullWidthTabs width="fluid" height="" id_readings={ID_Readings} od_readings={OD_Readings}/>}
+            {/* <p>ID_READING : {ID_Readings[ID_Readings.length-1]} OD_READING : {OD_Readings[OD_Readings.length-1]}</p> */}
+            
         </div>
     )
 }

@@ -13,7 +13,7 @@ function App() {
     <div className="App">
     <div id="root" className="d-flex " style={{width: "100%"}} height="100vh">
       <SideBar />
-      <div className="d-flex flex-column container-fluid p-0">
+      <div className="d-flex flex-column container-fluid p-0" style={{overflowY: "auto",height: "100vh"}}>
       <main className="flex-grow-1">
       <Routes>
       <Route path="/" element={<Home />} />

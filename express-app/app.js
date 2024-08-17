@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import mysql from 'mysql';
 import 'dotenv/config'; // This automatically loads the .env file
+import morgan from 'morgan';
 
 
 // import submitFormRouter from './app/api/submitform.js';
@@ -13,6 +14,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+app.use(morgan("dev"));
 
 
 // // Use the submit form router
@@ -63,8 +65,19 @@ app.get('/Fields', (req, res) => {
   });
 });
 
+app.get('/Readings', (req, res) => {
+  const sql = `SELECT ID_Reading,OD_Reading FROM Readings ORDER BY ID DESC LIMIT 10`;
+  connection.query(sql, (err, results) => {
+    if (err) {
+      console.error('Database test query failed:', err.message);
+      return res.status(505).send('Database test query failed');
+    }
+    res.send(results);
+  });
+});
+
 // Start the server
-const port = 3003; // Choose a port number
+const port = 3006; // Choose a port number
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

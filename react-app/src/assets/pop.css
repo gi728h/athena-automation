@@ -1,7 +1,7 @@
 .custom-popup {
   position: fixed; /* Positioned relative to the viewport */
   top: 50%; /* Vertically centered */
-  left: 30%; /* Start at the left of the parent container */
+  left: 32%; /* Start at the left of the parent container */
   transform: translateY(-50%); /* Adjust for vertical centering */
   width: 60%;
   margin-left: auto; /* Automatically adjust horizontal positioning within parent */
