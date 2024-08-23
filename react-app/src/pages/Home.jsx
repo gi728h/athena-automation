@@ -6,8 +6,9 @@ import FullWidthTabs from '../components/Tabs';
 // import { AppBar } from '@mui/material';
 import { AppContext } from '../AppContext';
 import React from 'react';
+import { Navigate } from 'react-router-dom';
 export default function Home() {
-    const { Page, setPage } = React.useContext(AppContext);
+    const { Page, setPage, userCredentials, setUserCredentials } = React.useContext(AppContext);
     setPage("Home");
     const [isPopupVisible, setPopupVisible] = useState(false);
     const [popMessage, setPopMessage] = useState({
@@ -19,21 +20,66 @@ export default function Home() {
     // eslint-disable-next-line no-unused-vars
     const [OD_Readings, setOD_Readings] = useState([]);
     const [Success, setSuccess] = useState(false);
+    const [NEW_ENTRY, setNEW_ENTRY] = useState(true);
 
     const Start = async () => {
         const res = await fetch('http://localhost:3006/Start');
         if (!res.ok) {
-            // setPopMessage({
-            //     title: "Error",
-            //     message: "Failed to connect to database"
-            // })
-            // setPopupVisible(true);
             alert("FAILED TO START")
         }
     }
 
-    
+    const fetchReadings = async () => {
+        const result = await fetch('http://localhost:3006/Readings');
+        if (!result.ok) {
+            setPopMessage({
+                title: "Error",
+                message: "Cannot GET Readings"
+            })
+            setPopupVisible(true);
+        } else {
+            const data = await result.json();
+            var id_readings = []
+            var od_readings = []
+            await data.forEach(async element => {
+                id_readings.push(element.ID_Reading);
+                od_readings.push(element.OD_Reading);
+            })
+            id_readings = id_readings.reverse();
+            od_readings = od_readings.reverse();
+            setID_Readings(id_readings);
+            setOD_Readings(od_readings);
+        }
+    }
 
+    useEffect(() => {
+        const socket = new WebSocket('ws://localhost:3006/ws');
+        socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            console.log(data);
+            if (data[0]["field_name"] === "NEW_ENTRY" && data[0]["value"] === "True") {
+                console.log("NEW_ENTRY set to True")
+                setNEW_ENTRY(true);
+                fetchReadings();
+            } else {
+                console.log("NEW_ENTRY set to False")
+            }
+        };
+        return () => {
+            if (socket.readyState === 1) { // <-- This is important
+                socket.close();
+            }
+        }
+    }, []);
+
+    const startMeasurement = async () => {
+        const res = await fetch('http://localhost:3006/NewEntry');
+        if (!res.ok) {
+            alert("FAILED TO START")
+        }
+        console.log(NEW_ENTRY);
+        setNEW_ENTRY(false);
+    }
 
     useEffect(() => {
         function sleep(ms) {
@@ -55,15 +101,15 @@ export default function Home() {
                 setProgress(25);
                 setPopupVisible(true);
                 while (true) {
-                     result = await fetch('http://localhost:3006/Fields?field_name="Zero"');
+                    result = await fetch('http://localhost:3006/Fields?field_name="Zero"');
                     if (!result.ok) {
                         setPopMessage({
                             title: "Error",
                             message: "Internal Server Error"
                         })
-                    }else{
+                    } else {
                         data = await result.json();
-                        if(data[0].value == "True"){
+                        if (data[0].value == "True") {
                             setPopMessage({
                                 title: "High Callibration",
                                 message: "Put High Callibrtion Master in Gauge"
@@ -81,9 +127,9 @@ export default function Home() {
                             title: "Error",
                             message: "Internal Server Error"
                         })
-                    }else{
+                    } else {
                         data = await result.json();
-                        if(data[0].value == "True"){
+                        if (data[0].value == "True") {
                             setPopMessage({
                                 title: "Low Callibration",
                                 message: "Put High Callibrtion Master in Gauge"
@@ -95,15 +141,15 @@ export default function Home() {
                 }
 
                 while (true) {
-                     result = await fetch('http://localhost:3006/Fields?field_name="Low"');
+                    result = await fetch('http://localhost:3006/Fields?field_name="Low"');
                     if (!result.ok) {
                         setPopMessage({
                             title: "Error",
                             message: "Internal Server Error"
                         })
-                    }else{
+                    } else {
                         var data = await result.json();
-                        if(data[0].value == "True"){
+                        if (data[0].value == "True") {
                             setPopMessage({
                                 title: "Success",
                                 message: "Calibration Completed"
@@ -114,34 +160,20 @@ export default function Home() {
                     }
                 }
             }
-            console.log("Hi");
-            await sleep(1000);
+            // console.log("Hi");
+            await sleep(5000);
             setPopupVisible(false);
-            result = await fetch('http://localhost:3006/Readings');
-            if (!result.ok) {
-                setPopMessage({
-                    title: "Error",
-                    message: "Cannot GET Readings"
-                })
-                setPopupVisible(true);
-            }else{
-                data = await result.json();
-                var id_readings = []
-                var od_readings = []
-                await data.forEach(async element => {
-                    id_readings.push(element.ID_Reading);
-                    od_readings.push(element.OD_Reading);
-                })
-                id_readings = id_readings.reverse();
-                od_readings = od_readings.reverse();
-                setID_Readings(id_readings);
-                setOD_Readings(od_readings);
-            }
+            await fetchReadings();
             setSuccess(true);
         }
         popUp();
 
-        }, []);
+    }, []);
+    if (!userCredentials) {
+        return (
+            <Navigate to="/login" />
+        )
+    }
     return (
         <div className="p-3 pb-0 height-fluid position-relative">
             <div className="container text-center dimmed-background ">
@@ -163,17 +195,17 @@ export default function Home() {
                 )}
             </div>
             <div className='d-flex justify-content-between'>
-            <h2 className='mb-0'>Home</h2>
-            <button type="button" className="d-flex btn btn-danger text-center align-items-center" height="30%" onClick={Start}>Start Measurement</button>
+                <h2 className='mb-0'>Home</h2>
+                <button type="button" className="d-flex btn btn-danger text-center align-items-center" height="30%" onClick={startMeasurement} disabled={!NEW_ENTRY}>Start Measurement</button>
             </div>
-            <hr className='m-2 mb-3 mx-0' style={{borderColor:"#6c757d"}}></hr>
-            
-            
+            <hr className='m-2 mb-3 mx-0' style={{ borderColor: "#6c757d" }}></hr>
+
+
             {/* {ID_Readings && <Chart Readings={ID_Readings}></Chart>} */}
             {/* {OD_Readings && <Chart Readings={OD_Readings}></Chart>}       */}
-            {Success && <FullWidthTabs width="fluid" height="" id_readings={ID_Readings} od_readings={OD_Readings}/>}
+            {Success && <FullWidthTabs width="fluid" height="" id_readings={ID_Readings} od_readings={OD_Readings} />}
             {/* <p>ID_READING : {ID_Readings[ID_Readings.length-1]} OD_READING : {OD_Readings[OD_Readings.length-1]}</p> */}
-            
+
         </div>
     )
 }

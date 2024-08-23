@@ -3,8 +3,10 @@ import athenalogo from "../assets/newLOGO2.png"
 import React from 'react'
 import { AppContext } from '../AppContext'
 import {Link} from "react-router-dom"
+import { useNavigate } from 'react-router-dom';
 export default function SideBar() {
-  const { Page, setPage } = React.useContext(AppContext);
+  const navigate = useNavigate();
+  const { Page, setPage, userCredentials ,setUserCredentials} = React.useContext(AppContext);
   return (
     <div className="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style={{ width: "23%", fontSize:"0.9rem" }}>
       <img className="mb-3 pb-3" src={athenalogo} />
@@ -60,7 +62,10 @@ export default function SideBar() {
           <li>
             <hr className="dropdown-divider" />
           </li>
-          <li><a className="dropdown-item" href="#">Sign out</a></li>
+          <li><a className="dropdown-item" onClick={()=>{
+            setUserCredentials(null)
+            navigate("/login")
+          }} href="#">logout</a></li>
         </ul>
       </div>
     </div>
