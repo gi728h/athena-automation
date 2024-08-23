@@ -1,9 +1,14 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-constant-condition */
 import { useEffect, useState } from 'react';
 import '../assets/pop.css';
 import FullWidthTabs from '../components/Tabs';
-
+// import { AppBar } from '@mui/material';
+import { AppContext } from '../AppContext';
+import React from 'react';
 export default function Home() {
+    const { Page, setPage } = React.useContext(AppContext);
+    setPage("Home");
     const [isPopupVisible, setPopupVisible] = useState(false);
     const [popMessage, setPopMessage] = useState({
         title: "",
@@ -14,6 +19,18 @@ export default function Home() {
     // eslint-disable-next-line no-unused-vars
     const [OD_Readings, setOD_Readings] = useState([]);
     const [Success, setSuccess] = useState(false);
+
+    const Start = async () => {
+        const res = await fetch('http://localhost:3006/Start');
+        if (!res.ok) {
+            // setPopMessage({
+            //     title: "Error",
+            //     message: "Failed to connect to database"
+            // })
+            // setPopupVisible(true);
+            alert("FAILED TO START")
+        }
+    }
 
     
 
@@ -145,8 +162,12 @@ export default function Home() {
                     </>
                 )}
             </div>
-            <h2>Home</h2>
-            <hr className='m-2 mb-3'></hr>
+            <div className='d-flex justify-content-between'>
+            <h2 className='mb-0'>Home</h2>
+            <button type="button" className="d-flex btn btn-danger text-center align-items-center" height="30%" onClick={Start}>Start Measurement</button>
+            </div>
+            <hr className='m-2 mb-3 mx-0' style={{borderColor:"#6c757d"}}></hr>
+            
             
             {/* {ID_Readings && <Chart Readings={ID_Readings}></Chart>} */}
             {/* {OD_Readings && <Chart Readings={OD_Readings}></Chart>}       */}
