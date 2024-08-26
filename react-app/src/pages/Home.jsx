@@ -7,6 +7,8 @@ import FullWidthTabs from '../components/Tabs';
 import { AppContext } from '../AppContext';
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+import { saveAs } from 'file-saver';
+
 export default function Home() {
     const { Page, setPage, userCredentials, setUserCredentials } = React.useContext(AppContext);
     setPage("Home");
@@ -49,6 +51,7 @@ export default function Home() {
             od_readings = od_readings.reverse();
             setID_Readings(id_readings);
             setOD_Readings(od_readings);
+            console.log(id_readings, od_readings);
         }
     }
 
@@ -80,7 +83,20 @@ export default function Home() {
         console.log(NEW_ENTRY);
         setNEW_ENTRY(false);
     }
-
+    const arrayToCSV = (array, headers) => {
+        const csvRows = [headers.join(',')];
+        array.forEach(row => {
+            csvRows.push(row.join(','));
+        });
+        return csvRows.join('\n');
+    };
+    const downloadCSV = (data1, data2, filename = 'data.csv') => {
+        const zip = (a, b) => a.map((k, i) => [k, b[i]]);
+        const headers = ['ID_READINGS', 'OD_READINGS'];
+        const csvData = arrayToCSV(zip(data1, data2), headers);
+        const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+        saveAs(blob, filename);
+    };
     useEffect(() => {
         function sleep(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
@@ -101,6 +117,7 @@ export default function Home() {
                 setProgress(25);
                 setPopupVisible(true);
                 while (true) {
+                    await sleep(2000);
                     result = await fetch('http://localhost:3006/Fields?field_name="Zero"');
                     if (!result.ok) {
                         setPopMessage({
@@ -121,6 +138,7 @@ export default function Home() {
                 }
 
                 while (true) {
+                    await sleep(2000);
                     result = await fetch('http://localhost:3006/Fields?field_name="High"');
                     if (!result.ok) {
                         setPopMessage({
@@ -141,6 +159,7 @@ export default function Home() {
                 }
 
                 while (true) {
+                    await sleep(2000);
                     result = await fetch('http://localhost:3006/Fields?field_name="Low"');
                     if (!result.ok) {
                         setPopMessage({
@@ -161,7 +180,7 @@ export default function Home() {
                 }
             }
             // console.log("Hi");
-            await sleep(5000);
+            await sleep(2000);
             setPopupVisible(false);
             await fetchReadings();
             setSuccess(true);
@@ -196,7 +215,11 @@ export default function Home() {
             </div>
             <div className='d-flex justify-content-between'>
                 <h2 className='mb-0'>Home</h2>
-                <button type="button" className="d-flex btn btn-danger text-center align-items-center" height="30%" onClick={startMeasurement} disabled={!NEW_ENTRY}>Start Measurement</button>
+                <div className='d-flex align-items-center'>
+                    <button type="button" className="d-flex btn btn-danger text-center align-items-center mx-2" height="30%" onClick={startMeasurement} disabled={!NEW_ENTRY}>▸ Start</button>
+                    <button type="button" className="d-flex btn btn-danger text-center align-items-center mx-2" height="30%" onClick={() => { downloadCSV(ID_Readings, OD_Readings) }}>⤓Download</button>
+
+                </div>
             </div>
             <hr className='m-2 mb-3 mx-0' style={{ borderColor: "#6c757d" }}></hr>
 
