@@ -80,7 +80,7 @@ app.get('/Fields', (req, res) => {
 });
 
 app.get('/Readings', (req, res) => {
-  const sql = `SELECT ID_Reading,OD_Reading FROM Readings ORDER BY ID DESC LIMIT 10`;
+  const sql = `SELECT ID_Reading,OD_Reading FROM Readings ORDER BY ID DESC LIMIT 30`;
   connection.query(sql, (err, results) => {
     if (err) {
       console.error('Database test query failed:', err.message);
@@ -166,6 +166,37 @@ app.get('/NewEntry', (req, res) => {
     res.status(200).send({ results });
   });
 })
+
+app.get('/Start',(req,res)=>{
+  const sql = `UPDATE Fields SET value = "True" WHERE field_name = "START"`;
+  connection.query(sql, (err, results) => {
+    if (err) {
+      console.error('Database test query failed:', err.message);
+      return res.status(505).send('Database test query failed');
+    }
+    res.status(200).send({ results });
+  });
+});
+app.get('/Index',(req,res)=>{
+  const sql = `UPDATE Fields SET value = "False" WHERE field_name = "INSERT_INDEXING"`;
+  connection.query(sql, (err, results) => {
+    if (err) {
+      console.error('Database test query failed:', err.message);
+      return res.status(505).send('Database test query failed');
+    }
+    res.status(200).send({ results });
+  });
+})
+app.get('/Tool',(req,res)=>{
+  const sql = `UPDATE Fields SET value = "False" WHERE field_name = "TOOL_BROKEN"`;
+  connection.query(sql, (err, results) => {
+    if (err) {
+      console.error('Database test query failed:', err.message);
+      return res.status(505).send('Database test query failed');
+    }
+    res.status(200).send({ results });
+  });
+})
 // Start the server
 const port = 3006; // Choose a port number
 app.listen(port, () => {
@@ -185,13 +216,17 @@ app.listen(port, () => {
 export default app;
 
 const checkFlag = () => {
-  connection.query('SELECT * FROM Fields WHERE field_name = "NEW_ENTRY"', (error, results) => {
+  connection.query('SELECT * FROM Fields', (error, results) => {
     if (error) throw error;
 
     // If the flag is true, send a message to all connected WebSocket clients
     clients.forEach((client) => {
       if (client.readyState === client.OPEN) {
-        client.send(JSON.stringify(results));
+        const result = results.reduce((acc, item) => {
+          acc[item.field_name] = item.value;
+          return acc;
+        }, {});
+        client.send(JSON.stringify(result));
       }
     });
 
@@ -208,6 +243,6 @@ app.ws('/ws', (ws, req) => {
   clients.add(ws);
   ws.on('close', () => {
     clients.delete(ws);
-  }); 
+  });
 });
 

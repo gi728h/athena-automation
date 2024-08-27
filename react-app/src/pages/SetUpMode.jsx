@@ -9,13 +9,13 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { saveAs } from 'file-saver';
 
-export default function Home() {
+export default function SetUpMode() {
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
-
+    
     const { Page, setPage, userCredentials, setUserCredentials } = React.useContext(AppContext);
-    setPage("Home");
+    setPage("SetUpMode");
     const [isPopupVisible, setPopupVisible] = useState(true);
     const [popMessage, setPopMessage] = useState({
         title: "Loading",

@@ -2,6 +2,7 @@ import Footer from './components/Footer'
 import SideBar from './components/SideBar'
 import React from 'react'
 import Home from './pages/Home'
+import SetUpMode from './pages/SetUpMode'
 import { AppContext } from './AppContext'
 import Table from './pages/Table'
 import { Navigate, useLocation } from 'react-router-dom';
@@ -55,6 +56,7 @@ function App() {
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/table" element={<Table />} />
+                  <Route path="/SetUpMode" element={<SetUpMode/>}/>
                 </Routes> 
               </main>
               <Footer />
