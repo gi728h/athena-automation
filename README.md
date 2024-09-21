@@ -186,11 +186,15 @@ The home page is the Calibration mode. This page is used to set the initial offs
 ### 2.SetUp Mode:
 The setup mode is used to set the upper and lower specification limits for each feature. The user can select the units of measurement and the material type. The user can also select the type of setup either by entering the offset value or by using the auto setup feature.
 
-<table width=50%>
-  <tr width=50%>
-    <td style="text-align: center; vertical-align: top;" width=50%>
-      <img src="./images/SetUp.png"/>
-      <p style="margin: auto;text-align: center;" align="center">ID READINGS</p>
+<table>
+  <tr>
+    <td style="text-align: center; vertical-align: top;">
+      <img src="./images/SetUp2.png"/>
+      <p style="margin: auto;text-align: center;" align="center">SetUP Mode</p>
+    </td>
+    <td style="text-align: center; vertical-align: top;">
+      <img src="./images/SetUp1.png"  />
+      <p style="margin: auto;text-align: center;" align="center">SetUP Mode</p>
     </td>
   </tr>
 </table>
@@ -199,7 +203,26 @@ The setup mode is used to set the upper and lower specification limits for each 
 ### 3.Table:
 The table page shows the data from the database in a table format. The user can select which table to view and sort the data by any column. The user can also filter the data by any column. The user can also add new data to the table by clicking the "Add new data" button. The user can edit and delete data by clicking the "Edit" and "Delete" buttons respectively.
 
-<img src='./images/Table.png' width=40%>
-<img src='./images/TableAdd.png' width=40%>
-<img src='./images/TableDelete.png' width=40%>
-<img src='./images/TableUpdate.png' width=40%>
+<table>
+  <tr>
+    <td style="text-align: center; vertical-align: top;">
+      <img src='./images/Table.png'/>
+      <p style="margin: auto;text-align: center;" align="center">Table</p>
+    </td>
+    <td style="text-align: center; vertical-align: top;">
+      <img src='./images/TableAdd.png'  />
+      <p style="margin: auto;text-align: center;" align="center">Table Add</p>
+    </td>
+  </tr>
+   <tr>
+    <td style="text-align: center; vertical-align: top;">
+      <img src='./images/TableDelete.png'/>
+      <p style="margin: auto;text-align: center;" align="center">Table Delete</p>
+    </td>
+    <td style="text-align: center; vertical-align: top;">
+      <img src='./images/TableUpdate.png'  />
+      <p style="margin: auto;text-align: center;" align="center">Table Update</p>
+    </td>
+  </tr>
+</table>
+
