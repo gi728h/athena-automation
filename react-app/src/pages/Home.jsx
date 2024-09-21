@@ -21,7 +21,7 @@ export default function Home() {
         title: "Loading",
         message: "Please wait..."
     });
-    const [Progress, setProgress] = useState(15);
+    const [Progress, setProgress] = useState(16);
     const [ID_Readings, setID_Readings] = useState([]);
     // eslint-disable-next-line no-unused-vars
     const [OD_Readings, setOD_Readings] = useState([]);
@@ -60,6 +60,16 @@ export default function Home() {
         }
     }
     useEffect(() => {
+        async function setUp() {
+            const data = await fetch('http://localhost:3006/Calibration');
+            if (!data.ok) {
+                alert("FAILED TO ENTER CALIBRATION MODE")
+            }
+            localStorage.setItem('SetUpMode', "False");
+        }
+        setUp();
+    })
+    useEffect(() => {
 
         if (!ID_Readings.length || !OD_Readings.length) {
             console.log("Data Fetched..")
@@ -76,7 +86,7 @@ export default function Home() {
                     title: "Zero Callibration",
                     message: "Put Zero Callibrtion Master in Gauge"
                 })
-                setProgress(35);
+                setProgress(32);
                 setPopupVisible(true);
                 setShowProgress(true);
                 return;
@@ -87,7 +97,7 @@ export default function Home() {
                     title: "High Callibration",
                     message: "Put High Callibrtion Master in Gauge"
                 })
-                setProgress(60);
+                setProgress(48);
                 setPopupVisible(true);
                 setShowProgress(true);
                 return
@@ -98,7 +108,17 @@ export default function Home() {
                     title: "Low Callibration",
                     message: "Put Low Callibrtion Master in Gauge"
                 })
-                setProgress(85);
+                setProgress(64);
+                setPopupVisible(true);
+                setShowProgress(true);
+                return;
+            }
+            if (data.MEDIUM !== "True") {
+                setPopMessage({
+                    title: "Medium Callibration",
+                    message: "Put Medium Callibrtion Master in Gauge"
+                })
+                setProgress(80);
                 setPopupVisible(true);
                 setShowProgress(true);
                 return;
@@ -297,14 +317,14 @@ export default function Home() {
                 )}
             </div>
             <div className='d-flex justify-content-between'>
-                <h2 className='mb-0'>Home</h2>
+                <h2 className='mb-0'>Calibration</h2>
                 <div className='d-flex align-items-center'>
                     <button type="button" className="d-flex btn btn-danger text-center align-items-center mx-2" height="30%" onClick={startMeasurement} disabled={!NEW_ENTRY}>▸ Start</button>
                     <button type="button" className="d-flex btn btn-danger text-center align-items-center mx-2" height="30%" onClick={() => { downloadCSV(ID_Readings, OD_Readings) }}>⤓Download</button>
 
                 </div>
             </div>
-            <hr className='m-2 mb-3 mx-0' style={{ borderColor: "#6c757d" }}></hr>
+            <hr className='m-2 mb-2 mx-0' style={{ borderColor: "#6c757d" }}></hr>
 
 
             {/* {ID_Readings && <Chart Readings={ID_Readings}></Chart>} */}

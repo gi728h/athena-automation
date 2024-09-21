@@ -47,8 +47,8 @@ function App() {
   return (
     <AppContext.Provider value={{ Page, setPage, userCredentials, setUserCredentials }}>
       { !userCredentials && location.pathname !== "/login" ? <Navigate to="/login" /> :
-      <div className="App">
-        <div id="root" className={`d-flex ${hideSidebar && "justify-content-center mt-5"}`} style={{ width: "100%" }} height="100%">
+      <div className={`App ${hideSidebar && "d-flex align-items-center"}`} style={{ height: "100vh" }}>
+        <div id="root" className={`d-flex ${hideSidebar && "justify-content-center "}`} style={{ width: "100%",margin:"auto" }} height="100%">
           {!hideSidebar ? <>
             <SideBar />
             <div className="d-flex flex-column container-fluid p-0" style={{ overflowY: "auto", height: "100vh" }}>

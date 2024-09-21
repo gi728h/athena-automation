@@ -12,16 +12,50 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { AppContext } from '../AppContext';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import SlideUpPage from '../components/SlideUp';
 
 
-// TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
 
 export default function Login() {
   const navigate = useNavigate();
+  // const [isVisible, setIsVisible] = useState(true); // The state is now in the parent
+  const [isSlidingUp, setIsSlidingUp] = useState(false);
+
+  const handleSlideUp = () => {
+    setIsSlidingUp(true);
+  };
+
+  useEffect(() => {
+    const handleClick = (event) => {
+      console.log('Clicked:', event);
+      handleSlideUp();
+      window.removeEventListener('click', handleClick);
+      window.removeEventListener('keypress', handleKeyPress);
+    };
+
+    const handleKeyPress = (event) => {
+      console.log('Key Pressed:', event.key);
+      handleSlideUp();
+      window.removeEventListener('click', handleClick);
+      window.removeEventListener('keypress', handleKeyPress);
+    };
+
+    // Add event listeners
+    window.addEventListener('click', handleClick);
+    window.addEventListener('keypress', handleKeyPress);
+
+    // Cleanup function to remove event listeners
+    return () => {
+      window.removeEventListener('click', handleClick);
+      window.removeEventListener('keypress', handleKeyPress);
+    };
+  }, []);
+
   const {a,b,userCredentials,setUserCredentials} = useContext(AppContext)
 
   if (userCredentials) {
@@ -62,7 +96,8 @@ export default function Login() {
     await login()
   };
 
-  return (
+  return (<>
+    <SlideUpPage isSlidingUp={isSlidingUp} />
     <ThemeProvider theme={defaultTheme} classNameclassName={`login-page ${userCredentials ? 'slide-up' : ''}`}>
       <Container component="main" maxWidth="xs" bgcolor="background.paper">
         <CssBaseline />
@@ -78,8 +113,9 @@ export default function Login() {
           }
           })}
         >
-           <img className='mb-4' src="../../public/athenalogo.jpg" height={"60vh"}></img>  
+           {/* <img className='mb-4' src="../../public/athenalogo.jpg" height={"60vh"}></img>   */}
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+            <h2 className='text-center text-muted' style={{fontWeight: 'bold', fontFamily: 'system-ui'}}> LOGIN</h2>
             <TextField
               margin="normal"
               required
@@ -133,5 +169,7 @@ export default function Login() {
        
       </Container>
     </ThemeProvider>
+
+  </>
   );
 }

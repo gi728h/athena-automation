@@ -8,7 +8,7 @@ export default function SideBar() {
   const navigate = useNavigate();
   const { Page, setPage, userCredentials ,setUserCredentials} = React.useContext(AppContext);
   return (
-    <div className="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style={{ width: "23%", fontSize:"0.9rem" }}>
+    <div className="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style={{ width: "25%", fontSize:"0.9rem" }}>
       <img className="mb-3 pb-3" src={athenalogo} />
 
       <ul className="nav nav-pills flex-column mb-auto">

@@ -22,6 +22,9 @@ Make sure you have the following installed on your machine:
    git clone https://github.com/yourusername/athena-automation-dashboard.git
    ```
 
+2. Navigate to project directory:
+
+      cd athena-automation-dashboard
 
 
 ## Configuring Database
@@ -43,16 +46,99 @@ Once the `.env` file is configured, you need to create the required table(s) usi
 
 
 ### Database Structure
+1. Table- Fields
 
-1. Table "Fields" :
-      --------------------------------------------------------------------------------------------
-      | Column Name   | Data Type    | Description                                               |
-      |---------------|--------------|-----------------------------------------------------------|
-      | `field_name`  | `VARCHAR(50)`| The name of the field (e.g., status or measurement type). |
-      | `value`       | `VARCHAR(50)`| The value associated with the field name.                 |
-      --------------------------------------------------------------------------------------------
-      In the **`field_name`** column the list of possible field names: `HIGH`, `LOW`, `ZERO`, `READINGS`.
+| Column Name  | Data Type    | Description                                               |
+|--------------|--------------|-----------------------------------------------------------|
+| `field_name` | `VARCHAR(50)`| The name of the field (e.g., status or measurement type). |
+| `value`      | `VARCHAR(50)`| The value associated with the field name.                 |
 
+Possible field names include: HIGH, LOW, ZERO, READINGS, NEW_ENTRY, MEDIUM, SETUP, START, INSERT_INDEXING, TOOL_BROKEN.
+
+```
+CREATE TABLE Fields (
+    field_name VARCHAR(50),
+    value VARCHAR(50)
+);
+```
+
+
+2. Table: Readings
+
+| Column Name    | Data Type         | Description                         |
+|----------------|-------------------|-------------------------------------|
+| `ID`           | `INT` (AUTO_INCREMENT, PRIMARY KEY) | Unique identifier for each reading. |
+| `ID_Reading`   | `VARCHAR(50)`     | Identifier for the reading.         |
+| `OD_Reading`   | `VARCHAR(50)`     | Corresponding output reading.       |
+
+```
+CREATE TABLE Readings (
+    ID INT NOT NULL AUTO_INCREMENT,
+    ID_Reading VARCHAR(50),
+    OD_Reading VARCHAR(50),
+    PRIMARY KEY (ID)
+);
+```
+
+3. Table: Df
+
+| Column Name  | Data Type    | Description                         |
+|--------------|--------------|-------------------------------------|
+| `ID`         | `INT` (AUTO_INCREMENT, PRIMARY KEY) | Unique identifier for each entry.   |
+| `UoM`       | `VARCHAR(20)`| Unit of Measure.                   |
+| `Feature`    | `VARCHAR(20)`| Feature name.                      |
+| `USL`        | `VARCHAR(20)`| Upper Specification Limit.         |
+| `LSL`        | `VARCHAR(20)`| Lower Specification Limit.         |
+| `SVfCL`      | `VARCHAR(20)`| Statistical Value for Control Limit.|
+| `Turret`     | `VARCHAR(20)`| Associated turret.                  |
+| `XZ`         | `VARCHAR(20)`| Measurement details.                |
+| `Calhigh`    | `VARCHAR(20)`| Calibration high value.            |
+| `Callow`     | `VARCHAR(20)`| Calibration low value.             |
+| `Bias`       | `VARCHAR(20)`| Measurement bias.                  |
+| `Max`        | `VARCHAR(20)`| Maximum value.                     |
+| `DependsOn`  | `VARCHAR(20)`| Dependencies for the feature.     |
+| `WVfI`       | `VARCHAR(20)`| Value for Indicator.               |
+| `UIW`        | `VARCHAR(20)`| User Interface Widget.             |
+
+
+```
+CREATE TABLE Df (
+    ID INT AUTO_INCREMENT,
+    UoM VARCHAR(20),
+    Feature VARCHAR(20),
+    USL VARCHAR(20),
+    LSL VARCHAR(20),
+    SVfCL VARCHAR(20),
+    Turret VARCHAR(20),
+    XZ VARCHAR(20),
+    Calhigh VARCHAR(20),
+    Callow VARCHAR(20),
+    Bias VARCHAR(20),
+    Max VARCHAR(20),
+    DependsOn VARCHAR(20),
+    WVfI VARCHAR(20),
+    UIW VARCHAR(20),
+    PRIMARY KEY (ID)
+);
+```
+4. Triggers to set 
+```
+CREATE TRIGGER check_before_insert
+BEFORE INSERT ON Readings
+FOR EACH ROW
+BEGIN
+IF (SELECT value FROM Fields WHERE field_name = 'SETUP' LIMIT 1) = 'True' THEN
+      SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'Insert not allowed because condition in Fields is not True.';
+END IF;
+END;
+```
+```
+CREATE TRIGGER after_reading_insert AFTER INSERT 
+ON Readings
+FOR EACH ROW
+UPDATE Fields SET value = 'True' WHERE field_name = 'NEW_ENTRY';
+```
 ## Getting Started
 
 STEP 1 : Configure the database 
@@ -75,3 +161,25 @@ npm run dev
 Open [http://localhost:5173](http://localhost:5173) with your browser to see the result.
 
 
+## Page description 
+
+### 1.Calibration Mode:
+The home page is the Calibration mode. This page is used to set the initial offset of the sensor. The user can select the units of measurement and the material type. The user can also select the type of calibration either by entering the offset value or by using the auto calibration feature. The user is also informed of the current state of the device, whether it is in calibration mode or not.
+
+
+<img src='./images/Calibration_ID.png' width=40%>
+<img src='./images/Calibration_OD.png' width=40%>
+
+### 2.SetUp Mode:
+The setup mode is used to set the upper and lower specification limits for each feature. The user can select the units of measurement and the material type. The user can also select the type of setup either by entering the offset value or by using the auto setup feature.
+
+<img src='./images/SetUp.png' width=40%>
+
+
+### 3.Table:
+The table page shows the data from the database in a table format. The user can select which table to view and sort the data by any column. The user can also filter the data by any column. The user can also add new data to the table by clicking the "Add new data" button. The user can edit and delete data by clicking the "Edit" and "Delete" buttons respectively.
+
+<img src='./images/Table.png' width=40%>
+<img src='./images/TableAdd.png' width=40%>
+<img src='./images/TableDelete.png' width=40%>
+<img src='./images/TableUpdate.png' width=40%>
