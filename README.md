@@ -168,15 +168,16 @@ The home page is the Calibration mode. This page is used to set the initial offs
 
 
 <div style="display: flex;">
-   <div width=50%>
-      <img src='./images/Calibration_ID.png' width=40%>
+   <div style="flex: 1; text-align: center;">
+      <img src="./images/Calibration_ID.png" style="width: 40%;">
       <p>ID READINGS</p>
    </div>
-   <div width=50%>
-      <img src='./images/Calibration_OD.png' width=40%>
+   <div style="flex: 1; text-align: center;">
+      <img src="./images/Calibration_OD.png" style="width: 40%;">
       <p>OD READINGS</p>
    </div>
 </div>
+
 
 ### 2.SetUp Mode:
 The setup mode is used to set the upper and lower specification limits for each feature. The user can select the units of measurement and the material type. The user can also select the type of setup either by entering the offset value or by using the auto setup feature.
