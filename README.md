@@ -168,11 +168,14 @@ The home page is the Calibration mode. This page is used to set the initial offs
 
 
 <div style="display: inline-block;">
-<div style="margin:5%">
-<img src='./images/Calibration_ID.png' width=40%>
-<h4>ID READINGS</h4>
-</div>
-<img src='./images/Calibration_OD.png' width=40%>
+   <div style="margin:5px">
+      <img src='./images/Calibration_ID.png' width=40%>
+      <h4>ID READINGS</h4>
+   </div>
+   <div style="margin:5px">
+      <img src='./images/Calibration_OD.png' width=40%>
+      <h4>OD READINGS</h4>
+   </div>
 </div>
 
 ### 2.SetUp Mode:
