@@ -188,7 +188,7 @@ The setup mode is used to set the upper and lower specification limits for each 
 
 <table width=50%>
   <tr width=50%>
-    <td style="text-align: center; vertical-align: top;">
+    <td style="text-align: center; vertical-align: top;" width=50%>
       <img src="./images/SetUp.png"/>
       <p style="margin: auto;text-align: center;" align="center">ID READINGS</p>
     </td>
