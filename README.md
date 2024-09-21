@@ -193,11 +193,11 @@ The setup mode is used to set the upper and lower specification limits for each 
   <tr>
     <td style="text-align: center; vertical-align: top;">
       <img src="./images/SetUp2.png"/>
-      <p style="margin: auto;text-align: center;" align="center">SetUP Mode</p>
+      <p style="margin: auto;text-align: center;" align="center">SetUP Mode (Zero Calibration)</p>
     </td>
     <td style="text-align: center; vertical-align: top;">
       <img src="./images/SetUp1.png"  />
-      <p style="margin: auto;text-align: center;" align="center">SetUP Mode</p>
+      <p style="margin: auto;text-align: center;" align="center">SetUP Mode (Success)</p>
     </td>
   </tr>
 </table>
