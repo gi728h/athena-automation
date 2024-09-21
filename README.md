@@ -167,16 +167,18 @@ Open [http://localhost:5173](http://localhost:5173) with your browser to see the
 The home page is the Calibration mode. This page is used to set the initial offset of the sensor. The user can select the units of measurement and the material type. The user can also select the type of calibration either by entering the offset value or by using the auto calibration feature. The user is also informed of the current state of the device, whether it is in calibration mode or not.
 
 
-<div style="display: flex;">
-   <div style="flex: 1; text-align: center;">
-      <img src="./images/Calibration_ID.png" style="width: 40%;">
+<table>
+  <tr>
+    <td style="text-align: center;">
+      <img src="./images/Calibration_ID.png" width="40%" />
       <p>ID READINGS</p>
-   </div>
-   <div style="flex: 1; text-align: center;">
-      <img src="./images/Calibration_OD.png" style="width: 40%;">
+    </td>
+    <td style="text-align: center;">
+      <img src="./images/Calibration_OD.png" width="40%" />
       <p>OD READINGS</p>
-   </div>
-</div>
+    </td>
+  </tr>
+</table>
 
 
 ### 2.SetUp Mode:
