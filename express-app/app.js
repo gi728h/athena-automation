@@ -218,6 +218,10 @@ app.get("/Setup", (req, res) => {
 
     UPDATE Fields 
     SET value = 'False' 
+    WHERE field_name = 'CALIBRATION';
+
+    UPDATE Fields 
+    SET value = 'False' 
     WHERE field_name IN ('LOW', 'HIGH', 'MEDIUM', 'ZERO', 'START');
   `;
   connection.query(sql, (err, results) => {
@@ -230,7 +234,15 @@ app.get("/Setup", (req, res) => {
 });
 
 app.get("/Calibration", (req, res) => {
-  const sql = `UPDATE Fields SET value = "False" WHERE field_name = "SETUP";`;
+  const sql = `
+  UPDATE Fields 
+  SET value = "True" 
+  WHERE field_name = "CALIBRATION";
+  
+  UPDATE Fields 
+  SET value = "False" 
+  WHERE field_name = "SETUP";
+  `;
   connection.query(sql, (err, results) => {
     if (err) {
       console.error("Database test query failed:", err.message);

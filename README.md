@@ -13,7 +13,6 @@ Make sure you have the following installed on your machine:
 - [Node.js](https://nodejs.org/) (v14 or later)
 - [npm](https://www.npmjs.com/) (v6 or later)
 
-
 ### Installation
 
 1. Clone the repository:
@@ -24,15 +23,15 @@ Make sure you have the following installed on your machine:
 
 2. Navigate to project directory:
 
-      cd athena-automation-dashboard
-
+   cd athena-automation-dashboard
 
 ## Configuring Database
 
-To configure the database connection, you need to create a `.env` file in the root directory of the 
+To configure the database connection, you need to create a `.env` file in the root directory of the
 express project.
 
 Here's an example of how the `.env` file should look like:
+
 ```
       DB_HOST=<db_url_here>
       DB_USER=<db_username>
@@ -41,19 +40,18 @@ Here's an example of how the `.env` file should look like:
       DB_NAME=<db_name>
 ```
 
-
 Once the `.env` file is configured, you need to create the required table(s) using the provided schema.
 
-
 ### Database Structure
+
 1. Table- Fields
 
-| Column Name  | Data Type    | Description                                               |
-|--------------|--------------|-----------------------------------------------------------|
-| `field_name` | `VARCHAR(50)`| The name of the field (e.g., status or measurement type). |
-| `value`      | `VARCHAR(50)`| The value associated with the field name.                 |
+| Column Name  | Data Type     | Description                                               |
+| ------------ | ------------- | --------------------------------------------------------- |
+| `field_name` | `VARCHAR(50)` | The name of the field (e.g., status or measurement type). |
+| `value`      | `VARCHAR(50)` | The value associated with the field name.                 |
 
-Possible field names include: HIGH, LOW, ZERO, READINGS, NEW_ENTRY, MEDIUM, SETUP, START, INSERT_INDEXING, TOOL_BROKEN.
+Possible field names include: HIGH, LOW, ZERO, READINGS, NEW_ENTRY, MEDIUM, SETUP,CALIBRATION, START, INSERT_INDEXING, TOOL_BROKEN.
 
 ```
 CREATE TABLE Fields (
@@ -62,14 +60,13 @@ CREATE TABLE Fields (
 );
 ```
 
-
 2. Table: Readings
 
-| Column Name    | Data Type         | Description                         |
-|----------------|-------------------|-------------------------------------|
-| `ID`           | `INT` (AUTO_INCREMENT, PRIMARY KEY) | Unique identifier for each reading. |
-| `ID_Reading`   | `VARCHAR(50)`     | Identifier for the reading.         |
-| `OD_Reading`   | `VARCHAR(50)`     | Corresponding output reading.       |
+| Column Name  | Data Type                           | Description                         |
+| ------------ | ----------------------------------- | ----------------------------------- |
+| `ID`         | `INT` (AUTO_INCREMENT, PRIMARY KEY) | Unique identifier for each reading. |
+| `ID_Reading` | `VARCHAR(50)`                       | Identifier for the reading.         |
+| `OD_Reading` | `VARCHAR(50)`                       | Corresponding output reading.       |
 
 ```
 CREATE TABLE Readings (
@@ -82,24 +79,23 @@ CREATE TABLE Readings (
 
 3. Table: Df
 
-| Column Name  | Data Type    | Description                         |
-|--------------|--------------|-------------------------------------|
-| `ID`         | `INT` (AUTO_INCREMENT, PRIMARY KEY) | Unique identifier for each entry.   |
-| `UoM`       | `VARCHAR(20)`| Unit of Measure.                   |
-| `Feature`    | `VARCHAR(20)`| Feature name.                      |
-| `USL`        | `VARCHAR(20)`| Upper Specification Limit.         |
-| `LSL`        | `VARCHAR(20)`| Lower Specification Limit.         |
-| `SVfCL`      | `VARCHAR(20)`| Statistical Value for Control Limit.|
-| `Turret`     | `VARCHAR(20)`| Associated turret.                  |
-| `XZ`         | `VARCHAR(20)`| Measurement details.                |
-| `Calhigh`    | `VARCHAR(20)`| Calibration high value.            |
-| `Callow`     | `VARCHAR(20)`| Calibration low value.             |
-| `Bias`       | `VARCHAR(20)`| Measurement bias.                  |
-| `Max`        | `VARCHAR(20)`| Maximum value.                     |
-| `DependsOn`  | `VARCHAR(20)`| Dependencies for the feature.     |
-| `WVfI`       | `VARCHAR(20)`| Value for Indicator.               |
-| `UIW`        | `VARCHAR(20)`| User Interface Widget.             |
-
+| Column Name | Data Type                           | Description                          |
+| ----------- | ----------------------------------- | ------------------------------------ |
+| `ID`        | `INT` (AUTO_INCREMENT, PRIMARY KEY) | Unique identifier for each entry.    |
+| `UoM`       | `VARCHAR(20)`                       | Unit of Measure.                     |
+| `Feature`   | `VARCHAR(20)`                       | Feature name.                        |
+| `USL`       | `VARCHAR(20)`                       | Upper Specification Limit.           |
+| `LSL`       | `VARCHAR(20)`                       | Lower Specification Limit.           |
+| `SVfCL`     | `VARCHAR(20)`                       | Statistical Value for Control Limit. |
+| `Turret`    | `VARCHAR(20)`                       | Associated turret.                   |
+| `XZ`        | `VARCHAR(20)`                       | Measurement details.                 |
+| `Calhigh`   | `VARCHAR(20)`                       | Calibration high value.              |
+| `Callow`    | `VARCHAR(20)`                       | Calibration low value.               |
+| `Bias`      | `VARCHAR(20)`                       | Measurement bias.                    |
+| `Max`       | `VARCHAR(20)`                       | Maximum value.                       |
+| `DependsOn` | `VARCHAR(20)`                       | Dependencies for the feature.        |
+| `WVfI`      | `VARCHAR(20)`                       | Value for Indicator.                 |
+| `UIW`       | `VARCHAR(20)`                       | User Interface Widget.               |
 
 ```
 CREATE TABLE Df (
@@ -121,7 +117,9 @@ CREATE TABLE Df (
     PRIMARY KEY (ID)
 );
 ```
-4. Triggers to set 
+
+4. Triggers to set
+
 ```
 CREATE TRIGGER check_before_insert
 BEFORE INSERT ON Readings
@@ -133,15 +131,17 @@ IF (SELECT value FROM Fields WHERE field_name = 'SETUP' LIMIT 1) = 'True' THEN
 END IF;
 END;
 ```
+
 ```
-CREATE TRIGGER after_reading_insert AFTER INSERT 
+CREATE TRIGGER after_reading_insert AFTER INSERT
 ON Readings
 FOR EACH ROW
 UPDATE Fields SET value = 'True' WHERE field_name = 'NEW_ENTRY';
 ```
+
 ## Getting Started
 
-STEP 1 : Configure the database 
+STEP 1 : Configure the database
 
 STEP 2 : run the express server
 
@@ -150,6 +150,7 @@ cd ./express-app
 npm install
 node app.js
 ```
+
 STEP 3 : run the react develeopment sserver
 
 ```bash
@@ -160,15 +161,17 @@ npm run dev
 
 Open [http://localhost:5173](http://localhost:5173) with your browser to see the result.
 
+## Page description
 
-## Page description 
 ### 0.Login Page :
+
 ##### [ Username - admin , Password - admin ]
+
 <img src="./images/Login.gif" width=50%>
 
 ### 1.Calibration Mode:
-The home page is the Calibration mode. This page is used to set the initial offset of the sensor. The user can select the units of measurement and the material type. The user can also select the type of calibration either by entering the offset value or by using the auto calibration feature. The user is also informed of the current state of the device, whether it is in calibration mode or not.
 
+The home page is the Calibration mode. This page is used to set the initial offset of the sensor. The user can select the units of measurement and the material type. The user can also select the type of calibration either by entering the offset value or by using the auto calibration feature. The user is also informed of the current state of the device, whether it is in calibration mode or not.
 
 <table>
   <tr>
@@ -183,10 +186,8 @@ The home page is the Calibration mode. This page is used to set the initial offs
   </tr>
 </table>
 
-
-
-
 ### 2.SetUp Mode:
+
 The setup mode is used to set the upper and lower specification limits for each feature. The user can select the units of measurement and the material type. The user can also select the type of setup either by entering the offset value or by using the auto setup feature.
 
 <table>
@@ -202,8 +203,8 @@ The setup mode is used to set the upper and lower specification limits for each 
   </tr>
 </table>
 
-
 ### 3.Table:
+
 The table page shows the data from the database in a table format. The user can select which table to view and sort the data by any column. The user can also filter the data by any column. The user can also add new data to the table by clicking the "Add new data" button. The user can edit and delete data by clicking the "Edit" and "Delete" buttons respectively.
 
 <table>
@@ -228,4 +229,3 @@ The table page shows the data from the database in a table format. The user can 
     </td>
   </tr>
 </table>
-
