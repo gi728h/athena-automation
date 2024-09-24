@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import athenalogo from "../assets/newLOGO2.png"
+import calicon from "../assets/spanner1.svg"
 import React from 'react'
 import { AppContext } from '../AppContext'
 import {Link} from "react-router-dom"
@@ -7,16 +8,29 @@ import { useNavigate } from 'react-router-dom';
 export default function SideBar() {
   const navigate = useNavigate();
   const { Page, setPage, userCredentials ,setUserCredentials} = React.useContext(AppContext);
+  const BP  = async  () => {
+    const data = await fetch('http://localhost:3006/BP');
+    if (data.status !== 200) {
+      alert("FAILED TO BYPASS")
+    }else{
+      alert("BYPASS SUCCESSFULLY")
+    }
+  }
   return (
     <div className="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style={{ width: "25%", fontSize:"0.9rem" }}>
       <img className="mb-3 pb-3" src={athenalogo} />
-
       <ul className="nav nav-pills flex-column mb-auto">
-        <li className="nav-item">
+      <li className="nav-item">
           <Link to="/" className={`nav-link text-white ${Page === "Home" ? "active bg-danger" : ""}`} {...{ onClick: () => setPage("Home") }} >
             <svg className="bi me-2 bi-house" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
               <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z" />
             </svg>
+            HOME
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link to="/Calibration" className={`nav-link text-white ${Page === "Calibration" ? "active bg-danger" : ""}`} {...{ onClick: () => setPage("Home") }} >
+          <img className="me-2" src={calicon} width="16" height="16"/>
             CALLIBRATION
           </Link>
         </li>
@@ -36,6 +50,8 @@ export default function SideBar() {
             TABLE
           </Link>
         </li>
+      
+
         {/* <li>
           <Link to="/Users" className={`nav-link text-white ${Page === "Users" ? "active bg-danger" : ""}`} {...{ onClick: () => setPage("Users") }}>
             <svg className="bi me-2 bi-people" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -45,8 +61,8 @@ export default function SideBar() {
           </Link>
         </li> */}
       </ul>
-
       <div className="dropdown">
+        <button className="btn  bg-light text-black" type="button" style={{ width: "100%" ,marginBottom:"20px",fontSize:"0.9rem"}} onClick={() => {BP()}}>BY-PASS BUTTON</button>
         <a href="#" className="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1"
           data-bs-toggle="dropdown" aria-expanded="false">
           <svg className="bi me-2 bi-person-circle" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">

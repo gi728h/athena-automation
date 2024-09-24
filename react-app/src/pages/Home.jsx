@@ -15,7 +15,7 @@ export default function Home() {
     }
 
     const { Page, setPage, userCredentials, setUserCredentials } = React.useContext(AppContext);
-    setPage("Home");
+    setPage("Calibration");
     const [isPopupVisible, setPopupVisible] = useState(true);
     const [popMessage, setPopMessage] = useState({
         title: "Loading",

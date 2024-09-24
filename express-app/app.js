@@ -252,6 +252,30 @@ app.get("/Calibration", (req, res) => {
   });
 });
 
+app.get("/BP", (req, res) => {
+  const sql = `UPDATE Fields SET value = "True" WHERE field_name = "BP";`;
+  connection.query(sql, (err, results) => {
+    if (err) {
+      console.error("Database test query failed:", err.message);
+      return res.status(505).send("Database test query failed");
+    }
+    res.status(200).send({ results });
+  });
+});
+
+app.get("/Home", (req, res) => {
+  const sql = `UPDATE Fields SET value = "False" WHERE field_name = "CALIBRATION";  
+  UPDATE Fields SET value = "False" WHERE field_name = "SETUP";`;
+  connection.query(sql, (err, results) => {
+    if (err) {
+      console.error("Database test query failed:", err.message);
+      return res.status(505).send("Database test query failed");
+    }
+    res.status(200).send({ results });
+  });
+});
+
+
 // Start the server
 const port = 3006; // Choose a port number
 app.listen(port, () => {

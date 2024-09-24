@@ -51,7 +51,7 @@ Once the `.env` file is configured, you need to create the required table(s) usi
 | `field_name` | `VARCHAR(50)` | The name of the field (e.g., status or measurement type). |
 | `value`      | `VARCHAR(50)` | The value associated with the field name.                 |
 
-Possible field names include: HIGH, LOW, ZERO, READINGS, NEW_ENTRY, MEDIUM, SETUP,CALIBRATION, START, INSERT_INDEXING, TOOL_BROKEN.
+Possible field names include: HIGH, LOW, ZERO, READINGS, NEW_ENTRY, MEDIUM, SETUP, CALIBRATION, START, INSERT_INDEXING, TOOL_BROKEN, BP.
 
 ```
 CREATE TABLE Fields (
