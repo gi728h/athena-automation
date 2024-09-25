@@ -17,4 +17,4 @@ sleep 5
 
 # Open http://localhost:5173/ in an incognito window in Chromium
 echo "Opening http://localhost:5173/ in Chromium incognito mode..."
-chromium-browser --incognito --start-fullscreen` http://localhost:5173/
+chromium-browser --incognito --start-fullscreen "http://localhost:5173/"
